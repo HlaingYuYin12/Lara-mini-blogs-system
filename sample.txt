@@ -1,0 +1,7 @@
+Template bind
+************
+1.All css js > public > folder နဲ့ခွဲ
+2.all html files > blade >
+3.folder >master
+4.css link ,js link > {{asset('../../something')}}  asset က publicကိုထောက်တယ်
+

@@ -69,31 +69,53 @@
                 </form>
             </div>
             <div class="col-lg offset-1 mt-2">
-                <div class="card shadow-sm my-2">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <div class=""> This is title</div>
-                            <div class=""> 24/7/2025</div>
-                        </div>
-                        <div class="my-2 text-muted">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Ullam, quisquam suscipit nemo vel necessitatibus eveniet beatae sint ratione facilis temporibus, nisi repellat saepe, asperiores aliquam? Illo et eius non quas.
-                        </div>
-
-                        <div class="d-flex justify-content-between">
-                            <div class="">
-                                <i class="fa-solid me-2 fa-money-bill-1 text-primary"></i>10000 mmk |
-                                <i class="fa-solid me-2 fa-location-dot text-danger"></i>Yangon |
-                                <i class="fa-solid me-2 fa-star text-warning"></i>5 |
+                <div class="row">
+                    {{-- <div class="col text-tertiary">Count - {{count($data)}} </div> --}}
+                    <div class="col offset-6">
+                        <form action="{{route('blogList')}}" method="get">
+                            <div class="input-group mb-3">
+                                <input type="text"name="searchKey" value="{{request('searchKey')}}" class="form-control" placeholder="Search keywords..." aria-label="Recipient’s username" aria-describedby="button-addon2">
+                                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">
+                                Search<i class="ms-1 fa-solid fa-magnifying-glass"></i>
+                                </button>
                             </div>
-                            <div class="">
-                                <button class="btn btn-primary"><i class="fa-solid fa-eye"></i></button>
-                                <button class="btn btn-dark"><i class="fa-solid fa-pen-to-square"></i></button>
-                                <button class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
+                        </form>
 
+                    </div>
+                </div>
+                @foreach ($data as $item)
+                    <div class="card shadow-sm my-2">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div class=""> {{$item->title}}</div>
+
+                                <div class=""> {{$item->created_at->format('j-F-Y')}} </div> {{-- collection ဖြစ်မှ format သုံးလို့ရမယ် --}}
+                            </div>
+                            <div class="my-2 text-muted">
+                                {{Str::words($item->description , 20 , ' ...')}}  {{-- word ဘယ်နှစ်ခုစာပြမှာလဲ --}}
+                            </div>
+
+                            <div class="d-flex justify-content-between">
+                                <div class="">
+                                    <i class="fa-solid me-2 fa-money-bill-1 text-primary"></i>{{$item->fee}} mmk |
+                                    <i class="fa-solid me-2 fa-location-dot text-danger"></i>{{$item->address}} |
+                                    <i class="fa-solid me-2 fa-star text-warning"></i>{{$item->rating}} |
+                                </div>
+                                <div class="">
+                                    <button class="btn btn-primary"><i class="fa-solid fa-eye"></i></button>
+                                    <button class="btn btn-dark"><i class="fa-solid fa-pen-to-square"></i></button>
+                                    {{-- <a href="{{url('/blogs/delete/'.$item->id)}}"><button class="btn btn-danger"><i class="fa-solid fa-trash"></i></button></a> --}}
+                                    {{-- or  --}}
+                                    <a href="{{route('blogDelete',$item->id)}}"><button class="btn btn-danger"><i class="fa-solid fa-trash"></i></button></a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                @endforeach
+
+
+                {{-- pagination --}}
+                <span class="d-flex justify-content-end mt-3">{{$data->links()}}</span>
 
             </div>
         </div>
