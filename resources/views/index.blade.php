@@ -89,10 +89,12 @@
                             <div class="d-flex justify-content-between">
                                 <div class=""> {{$item->title}}</div>
 
-                                <div class=""> {{$item->created_at->format('j-F-Y')}} </div> {{-- collection ဖြစ်မှ format သုံးလို့ရမယ် --}}
+                                <div class=""> {{$item->created_at->format('j-F-Y | h:m:s')}} </div> {{-- collection ဖြစ်မှ format သုံးလို့ရမယ် --}}
                             </div>
                             <div class="my-2 text-muted">
                                 {{Str::words($item->description , 20 , ' ...')}}  {{-- word ဘယ်နှစ်ခုစာပြမှာလဲ --}}
+                                {{-- or --}}
+                                {{-- {{ substr($item->description, 0 ,100)}} --}}
                             </div>
 
                             <div class="d-flex justify-content-between">
@@ -102,8 +104,8 @@
                                     <i class="fa-solid me-2 fa-star text-warning"></i>{{$item->rating}} |
                                 </div>
                                 <div class="">
-                                    <button class="btn btn-primary"><i class="fa-solid fa-eye"></i></button>
-                                    <button class="btn btn-dark"><i class="fa-solid fa-pen-to-square"></i></button>
+                                    <a href="{{route('blogDetail',$item->id)}}"><button class="btn btn-primary"><i class="fa-solid fa-eye"></i></button></a>
+                                    <a href="{{route('blogEdit',$item->id)}}"><button class="btn btn-dark"><i class="fa-solid fa-pen-to-square"></i></button></a>
                                     {{-- <a href="{{url('/blogs/delete/'.$item->id)}}"><button class="btn btn-danger"><i class="fa-solid fa-trash"></i></button></a> --}}
                                     {{-- or  --}}
                                     <a href="{{route('blogDelete',$item->id)}}"><button class="btn btn-danger"><i class="fa-solid fa-trash"></i></button></a>

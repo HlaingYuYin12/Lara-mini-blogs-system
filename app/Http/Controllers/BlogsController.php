@@ -100,10 +100,39 @@ class BlogsController extends Controller
         return back();
     }
 
+
+    //blog details
+    public function detail($id){
+        // dd($id);
+
+        $data = Blogs::where('id',$id)->first();
+        // dd($data->toArray());
+
+
+        // return view('detail')->with(['item'=>$data]);
+        //or
+        return view('detail',compact('data'));
+    }
+
+
+    //edit blogs
+    public function edit($id){
+        $data = Blogs::where('id',$id)->first();
+        return view('update',compact('data'));
+    }
+
+
+    //update blogs
+    public function update(Request $request){
+        dd($request->all());
+    }
+
+
+
     //check blogs validation
     private function checkBlogValidation(Request $request){
         $validator = $request->validate([
-            'title' => 'required',
+            'title' => 'required', //name from client
             'description' => 'required',
             'fee' => 'required',
             'address' => 'required',

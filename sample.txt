@@ -5,3 +5,10 @@ Template bind
 3.folder >master
 4.css link ,js link > {{asset('../../something')}}  asset က publicကိုထောက်တယ်
 
+detail
+
+javascript history back --->အရင်လုပ်ထားတဲ့ cache file ကိုပြန် run ပေးတာ
+                            onclick="history.back()"
+
+
+update
