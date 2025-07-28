@@ -44,7 +44,7 @@ class BlogsController extends Controller
 
 
         //check validation
-        $this->checkBlogValidation($request);
+        $this->checkBlogValidation($request,'create');
         // dd('well done');
 
         $data = $this->requestBlogData($request);
@@ -124,23 +124,82 @@ class BlogsController extends Controller
 
     //update blogs
     public function update(Request $request){
-        dd($request->all());
+        // dd($request->all());
+        $id = $request->blog_id;
+        $old_image = $request->old_image;
+        // dd($id);
+
+
+        $this->checkBlogValidation($request,'update');
+
+        // dd('ok');
+        $data = $this->requestBlogData($request);
+        // dd($data);
+
+        if($request->hasFile('image')){
+            // delete old image under public folder
+             if($old_image !== null){
+                if( file_exists ( public_path('/uploads/'.$old_image && $old_image !== null) )){
+                    unlink(public_path('/uploads/'.$old_image));
+                }
+            }
+
+            //upload new image under public folder
+            $fileName = uniqid().$request->file('image')->getClientOriginalName();
+            $request->file('image')->move(public_path().'/uploads/' , $fileName);
+            $data['image']= $fileName;
+
+        }else{
+            // $data['image'] = null;
+            // if($old_image == null ){
+            //     $data['image'] = null;
+            // }else{
+            //     $data['image'] = $old_image;
+            // }
+
+            //or
+            $data['image'] = $old_image == null ? null : $old_image ;
+        }
+
+
+        //update data to database
+        Blogs::where('id',$id)->update($data);
+        Alert::success('Blog update success.', 'Blog has been updated...');  //sweetalert
+        return to_route('blogList');
+
     }
 
 
 
     //check blogs validation
-    private function checkBlogValidation(Request $request){
-        $validator = $request->validate([
-            'title' => 'required', //name from client
+    private function checkBlogValidation(Request $request,$action){
+
+        // dd($action);
+        $validationRules = [
+            'title' => 'required|unique:blogs,title', //name from client
             'description' => 'required',
             'fee' => 'required',
             'address' => 'required',
-            'image' => 'mimes:png,jpg,jpeg|file',
+            // 'image' => 'required|mimes:png,jpg,jpeg|file',
             'rating' => 'required'
-        ],[
-            'title.required' => 'သေချာရေး'
-        ]);
+        ];
+
+        $validationMessage = [
+            'title.required' => 'ဖြည့်စွက်ရန်လိုအပ်ပါသည်။',
+            'description.required' => 'ဖြည့်စွက်ရန်လိုအပ်ပါသည်။',
+            'fee.required' => 'ဖြည့်စွက်ရန်လိုအပ်ပါသည်။',
+            'address.required' => 'ဖြည့်စွက်ရန်လိုအပ်ပါသည်။',
+            'image.mimes' => 'Image type must be png,jpg, jpeg',
+            'rating.required' => 'ဖြည့်စွက်ရန်လိုအပ်ပါသည်။'
+        ];
+
+        //create---> image required ,,,, update ----> image no need
+        $validationRules['image'] = $action == 'create' ? 'required|mimes:png,jpg,jpeg|file' : 'mimes:png,jpg,jpeg|file' ;
+
+        // dd($validationRules);
+
+        $validator = $request->validate($validationRules,$validationMessage);
+
     }
     //request blog data
     private function requestBlogData($request){
