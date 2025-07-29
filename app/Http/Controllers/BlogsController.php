@@ -176,7 +176,7 @@ class BlogsController extends Controller
 
         // dd($action);
         $validationRules = [
-            'title' => 'required|unique:blogs,title', //name from client
+            'title' => 'required|unique:blogs,title,'.$request->blog_id, //name from client
             'description' => 'required',
             'fee' => 'required',
             'address' => 'required',
